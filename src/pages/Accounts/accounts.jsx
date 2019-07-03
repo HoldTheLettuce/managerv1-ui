@@ -32,7 +32,7 @@ export default class Accounts extends React.Component {
 
           form.resetFields();
 
-          axios.post('http://localhost:3001/api/accounts', values).then(res => {
+          axios.post('/api/accounts', values).then(res => {
             if(res.status === 200) {
                 message.success('Added Account');
 
@@ -79,8 +79,8 @@ export default class Accounts extends React.Component {
             loading: true
         });
 
-        axios.get('http://localhost:3001/api/accounts/stats').then(statsRes => {
-            let url = `http://localhost:3001/api/accounts?skip=${ (this.state.pagination.current - 1) * 10 }&limit=10`;
+        axios.get('/api/accounts/stats').then(statsRes => {
+            let url = `/api/accounts?skip=${ (this.state.pagination.current - 1) * 10 }&limit=10`;
 
             console.log(url);
 
@@ -110,7 +110,7 @@ export default class Accounts extends React.Component {
     handleAccountDelete = (record) => {
         console.log(record);
 
-        axios.delete('http://localhost:3001/api/accounts/' + record._id).then(res => {
+        axios.delete('/api/accounts/' + record._id).then(res => {
             message.success('Deleted account.');
 
             for(let i = 0; i < this.state.accounts.length; i++) {

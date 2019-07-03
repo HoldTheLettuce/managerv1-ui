@@ -12,7 +12,7 @@ class Launcher extends React.Component {
             if(!err) {
               console.log('Received values of form: ', values);
 
-                axios.post('http://localhost:3001/api/launching', values).then(res => {
+                axios.post('/api/launching', values).then(res => {
                     message.success('Launched.');
                 }).catch(err => {
                     console.log(err);

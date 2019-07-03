@@ -32,7 +32,7 @@ export default class Proxies extends React.Component {
 
           form.resetFields();
 
-          axios.post('http://localhost:3001/api/proxies', values).then(res => {
+          axios.post('/api/proxies', values).then(res => {
             if(res.status === 200) {
                 message.success('Added Proxy');
 
@@ -79,8 +79,8 @@ export default class Proxies extends React.Component {
             loading: true
         });
 
-        axios.get('http://localhost:3001/api/proxies/stats').then(statsRes => {
-            let url = `http://localhost:3001/api/proxies?skip=${ (this.state.pagination.current - 1) * 10 }&limit=10`;
+        axios.get('/api/proxies/stats').then(statsRes => {
+            let url = `/api/proxies?skip=${ (this.state.pagination.current - 1) * 10 }&limit=10`;
 
             console.log(url);
 
@@ -110,7 +110,7 @@ export default class Proxies extends React.Component {
     handleAccountDelete = (record) => {
         console.log(record);
 
-        axios.delete('http://localhost:3001/api/proxies/' + record._id).then(res => {
+        axios.delete('/api/proxies/' + record._id).then(res => {
             message.success('Deleted proxy.');
 
             for(let i = 0; i < this.state.proxies.length; i++) {

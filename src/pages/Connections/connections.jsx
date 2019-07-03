@@ -16,7 +16,7 @@ class Connections extends React.Component {
             loading: true
         });
 
-        axios.get('http://localhost:3001/api/bots').then(res => {
+        axios.get('api/bots').then(res => {
             this.setState({
                 bots: res.data,
                 loading: false
@@ -44,7 +44,7 @@ class Connections extends React.Component {
 
                 console.log(this.state.selectedRowKeys);
 
-                axios.put('http://localhost:3001/api/bots', {
+                axios.put('/api/bots', {
                     ids: this.state.selectedRowKeys,
                     message: values.message
                 }).then(res => {
