@@ -28,10 +28,10 @@ class Launcher extends React.Component {
         return (
             <div>
                 <Row gutter={16}>
-                    <Col xs={24}>
+                    <Col xs={24} sm={12} lg={6}>
                         <Card bordered={ false }>
                             <Form onSubmit={ this.handleSubmit }>
-                                <Form.Item>
+                                <Form.Item label="Amount">
                                     {getFieldDecorator('amount', {
                                         rules: [{ required: true, message: 'Please input the amount!' }],
                                     })(
@@ -42,7 +42,7 @@ class Launcher extends React.Component {
                                     )}
                                 </Form.Item>
 
-                                <Form.Item>
+                                <Form.Item label="Stop In * Minutes">
                                     {getFieldDecorator('stopIn', {
                                         rules: [{ required: true, message: 'Please input the stop amount!' }]
                                     })(
@@ -53,17 +53,17 @@ class Launcher extends React.Component {
                                     )}
                                 </Form.Item>
 
-                                <Form.Item>
-                                    {getFieldDecorator('script', {
-                                        rules: [{ required: true, message: 'Please input the script!' }],
+                                <Form.Item label="Target">
+                                    {getFieldDecorator('target', {
+                                        rules: [{ required: true, message: 'Please input the target!' }],
                                     })(
                                         <Input
-                                            placeholder="Script & Params"
+                                            placeholder="Target"
                                         />,
                                     )}
                                 </Form.Item>
 
-                                <Form.Item>
+                                <Form.Item label="World">
                                     {getFieldDecorator('world', {
                                         rules: [{ required: true, message: 'Please input the world!' }],
                                     })(
