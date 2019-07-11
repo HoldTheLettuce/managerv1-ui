@@ -17,7 +17,7 @@ class Launcher extends React.Component {
                 }).catch(err => {
                     console.log(err);
                     message.error('Failed.');
-                })
+                });
             }
         });
     }
@@ -28,7 +28,7 @@ class Launcher extends React.Component {
         return (
             <div>
                 <Row gutter={16}>
-                    <Col xs={24} sm={12} lg={6}>
+                    <Col xs={24} sm={12} xl={6}>
                         <Card bordered={ false }>
                             <Form onSubmit={ this.handleSubmit }>
                                 <Form.Item label="Amount">
@@ -42,23 +42,13 @@ class Launcher extends React.Component {
                                     )}
                                 </Form.Item>
 
-                                <Form.Item label="Stop In * Minutes">
+                                <Form.Item label="Close Client In 0-* Minutes">
                                     {getFieldDecorator('stopIn', {
                                         rules: [{ required: true, message: 'Please input the stop amount!' }]
                                     })(
                                         <InputNumber
-                                            placeholder="Stop In x Minutes (0 for never)"
+                                            placeholder="Close In x Minutes (0 for never)"
                                             style={{ minWidth: '100%' }}
-                                        />,
-                                    )}
-                                </Form.Item>
-
-                                <Form.Item label="Target">
-                                    {getFieldDecorator('target', {
-                                        rules: [{ required: true, message: 'Please input the target!' }],
-                                    })(
-                                        <Input
-                                            placeholder="Target"
                                         />,
                                     )}
                                 </Form.Item>

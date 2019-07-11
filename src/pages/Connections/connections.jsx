@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Row, Col, Card, Button, Table, Form, Input, Tag, message } from 'antd';
+import { Row, Col, Card, Button, Table, Icon, Tag, message } from 'antd';
 
 const axios = require('axios');
 
@@ -28,6 +28,14 @@ class Connections extends React.Component {
 
     componentDidMount() {
         this.fetch();
+
+        this.interval = setInterval(() => {
+            this.fetch();
+        }, 5000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     onSelectChange = selectedRowKeys => {
@@ -57,6 +65,27 @@ class Connections extends React.Component {
         });
     }
 
+    sendCommand = (trigger, content) => {
+        axios.put('/api/bots', {
+            ids: this.state.selectedRowKeys,
+            command: {
+                trigger,
+                content
+            }
+        }).then(res => {
+            message.success('Command sent.');
+        }).catch(err => {
+            console.log(err);
+            message.error('Failed.');
+        });
+    }
+
+    millisToMinutesAndSeconds = (millis) => {
+        var minutes = Math.floor(millis / 60000);
+        var seconds = ((millis % 60000) / 1000).toFixed(0);
+        return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+    }
+
     render() {
         const columns = [
             {
@@ -65,9 +94,30 @@ class Connections extends React.Component {
                 key: 'id'
             },
             {
-                title: 'Script',
-                dataIndex: 'script',
-                key: 'script'
+                title: 'Target',
+                dataIndex: 'customData.target',
+                key: 'customData.target'
+            },
+            {
+                title: 'Duration Min',
+                dataIndex: 'customData.durationMinutes',
+                key: 'customData.durationMinutes'
+            },
+            {
+                title: 'Duration Left',
+                dataIndex: 'customData.durationLeft',
+                key: 'customData.durationLeft',
+                render: (text, record) => (
+                    <span>{ this.millisToMinutesAndSeconds(record.customData.durationLeft) }</span>
+                )
+            },
+            {
+                title: 'Logged In',
+                dataIndex: 'isLoggedIn',
+                key: 'isLoggedIn',
+                render: (text, record) => (
+                    <span>{ record.isLoggedIn.toString() }</span>
+                )
             },
             {
                 title: 'State',
@@ -88,35 +138,23 @@ class Connections extends React.Component {
 
         const hasSelected = selectedRowKeys.length > 0;
 
-        const { getFieldDecorator } = this.props.form;
-
         return (
             <div>
                 <Row gutter={16}>
                     <Card bordered={ false }>
-                        <Col xs={24} style={{ marginBottom: '2em' }}>
-                            <Button type="primary" onClick={ () => { this.fetch() } }>Refresh</Button>
-                        </Col>
+                        <Col xs={24}>
+                            <Button color="default" className="control-button" onClick={ this.fetch }><Icon type="sync" /> Refresh</Button>
+                            <Button color="default" disabled={ !hasSelected } className="control-button" onClick={ () => { this.sendCommand('CLOSE', {}) } }><Icon type="close" /> Close Client</Button>
+                            <Button color="default" disabled={ !hasSelected } className="control-button" onClick={ () => { this.sendCommand('STOP', {}) } }><Icon type="stop" /> Stop & Logout</Button>
+                            <Button color="default" disabled={ !hasSelected } className="control-button" onClick={ () => {
+                                let target = prompt("What's the target's username?");
+                                let minutes = prompt("How many minutes should it run for?");
 
-                        <Col xs={24} lg={5}>
-                            <Form onSubmit={ this.handleSubmit }>
-                                <Form.Item>
-                                    {getFieldDecorator('message', {
-                                        rules: [{ required: true, message: 'Please input the message!' }],
-                                    })(
-                                        <Input
-                                            placeholder="Message"
-                                        />,
-                                    )}
-                                </Form.Item>
+                                if(target != null && minutes != null && target !== "") {
+                                    this.sendCommand('CHANGE_TARGET', { target, minutes });
+                                }
+                            } } style={{ marginBottom: '15px' }}><Icon type="swap" /> Change Target</Button>
 
-                                <Form.Item>
-                                    <Button type="dashed" htmlType="submit" disabled={ !hasSelected } block>Send</Button>
-                                </Form.Item>
-                            </Form>
-                        </Col>
-
-                        <Col xs={24} lg={19}>
                             <Table size="middle" columns={ columns } dataSource={ this.state.bots } loading={ this.state.loading } onChange={ this.handleTableChange } rowSelection={ rowSelection } rowKey="id" expandedRowRender={ record => (
                                 <ul>
                                     <li><strong>Metadata:</strong> <pre>{ JSON.stringify(record, null, 2) }</pre></li>
@@ -130,4 +168,4 @@ class Connections extends React.Component {
     }
 }
 
-export default Form.create({ name: 'connections_send' })(Connections);
+export default Connections;

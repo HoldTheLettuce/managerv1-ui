@@ -20,15 +20,13 @@ export default Form.create({ name: 'create_account' })(
             <Form layout="vertical">
               <Form.Item label="Username">
                 {getFieldDecorator('username', {
-                  rules: [{ required: true, message: 'Please input the username!' }],
-                  initialValue: 'none'
+                  rules: [{ required: true, message: 'Please input the username!' }]
                 })(<Input />)}
               </Form.Item>
 
               <Form.Item label="Password">
                 {getFieldDecorator('password', {
-                  rules: [{ required: true, message: 'Please input the password!' }],
-                  initialValue: 'none'
+                  rules: [{ required: true, message: 'Please input the password!' }]
                 })(<Input />)}
               </Form.Item>
 
